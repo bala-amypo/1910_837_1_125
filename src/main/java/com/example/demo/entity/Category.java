@@ -1,3 +1,4 @@
+-- Active: 1766120228965@@127.0.0.1@3306@mysql
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
