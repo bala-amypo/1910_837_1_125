@@ -9,4 +9,3 @@ public interface UserService {
 
     User findByEmailIgnoreCase(String email);
 }
-
