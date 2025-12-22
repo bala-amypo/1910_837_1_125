@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-   
+    private final PasswordEncoder passwordEncoder;  // <-- declare this
 
+    // Constructor injection
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
         user.setRole(request.getRole() != null ? request.getRole() : "MANAGER");
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));  // safe now
 
         return userRepository.save(user);
     }
