@@ -30,6 +30,13 @@
 
     <!-- ================= DEPENDENCIES ================= -->
     <dependencies>
+    <!-- Swagger OpenAPI -->
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.5.0</version>
+</dependency>
+
     <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
     <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
     <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
