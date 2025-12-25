@@ -11,8 +11,6 @@ import com.example.demo.service.MenuItemService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -33,58 +31,34 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public MenuItem createMenuItem(MenuItem menuItem) {
 
-        if (menuItem.getSellingPrice().compareTo(BigDecimal.ZERO) <= 0) {
+        if (menuItem.getSellingPrice().compareTo(BigDecimal.ZERO) < 0) {
             throw new BadRequestException("Invalid price");
         }
 
         if (menuItemRepository.findByNameIgnoreCase(menuItem.getName()).isPresent()) {
-            throw new BadRequestException("Duplicate menu item");
+            throw new BadRequestException("MenuItem already exists");
         }
 
-        Set<Category> categories = new HashSet<>();
-        if (menuItem.getCategories() != null) {
-            for (Category c : menuItem.getCategories()) {
-                Category cat = categoryRepository.findById(c.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        validateCategories(menuItem.getCategories());
 
-                if (!cat.isActive()) {
-                    throw new BadRequestException("Inactive category");
-                }
-                categories.add(cat);
-            }
-        }
-        menuItem.setCategories(categories);
         return menuItemRepository.save(menuItem);
     }
 
     @Override
-    public MenuItem updateMenuItem(Long id, MenuItem menuItem) {
-        MenuItem existing = menuItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
+    public MenuItem updateMenuItem(Long id, MenuItem updated) {
 
-        if (menuItem.isActive() &&
-                !recipeIngredientRepository.existsByMenuItemId(id)) {
-            throw new BadRequestException("Menu item cannot be active without recipe ingredients");
-        }
+        MenuItem existing = getMenuItemById(id);
 
-        existing.setName(menuItem.getName());
-        existing.setDescription(menuItem.getDescription());
-        existing.setSellingPrice(menuItem.getSellingPrice());
-        existing.setActive(menuItem.isActive());
-
-        if (menuItem.getCategories() != null) {
-            Set<Category> categories = new HashSet<>();
-            for (Category c : menuItem.getCategories()) {
-                Category cat = categoryRepository.findById(c.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-
-                if (!cat.isActive()) {
-                    throw new BadRequestException("Inactive category");
-                }
-                categories.add(cat);
+        if (updated.getActive() != null && updated.getActive()) {
+            if (!recipeIngredientRepository.existsByMenuItemId(id)) {
+                throw new BadRequestException("Cannot activate without ingredients");
             }
-            existing.setCategories(categories);
         }
+
+        validateCategories(updated.getCategories());
+
+        existing.setCategories(updated.getCategories());
+        existing.setActive(updated.getActive());
 
         return menuItemRepository.save(existing);
     }
@@ -92,18 +66,30 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public MenuItem getMenuItemById(Long id) {
         return menuItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
-    }
-
-    @Override
-    public List<MenuItem> getAllMenuItems() {
-        return menuItemRepository.findAll();
+                .orElseThrow(() -> new ResourceNotFoundException("MenuItem not found"));
     }
 
     @Override
     public void deactivateMenuItem(Long id) {
-        MenuItem menuItem = getMenuItemById(id);
-        menuItem.setActive(false);
-        menuItemRepository.save(menuItem);
+        MenuItem item = getMenuItemById(id);
+        item.setActive(false);
+        menuItemRepository.save(item);
+    }
+
+    @Override
+    public java.util.List<MenuItem> getAllMenuItems() {
+        return menuItemRepository.findAll();
+    }
+
+    private void validateCategories(Set<Category> categories) {
+        if (categories == null) return;
+
+        for (Category category : categories) {
+            Category dbCategory = categoryRepository.findById(category.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            if (!dbCategory.getActive()) {
+                throw new BadRequestException("Inactive category");
+            }
+        }
     }
 }

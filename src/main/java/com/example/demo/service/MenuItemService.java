@@ -12,7 +12,7 @@ public interface MenuItemService {
 
     MenuItem getMenuItemById(Long id);
 
-    List<MenuItem> getAllMenuItems();
-
     void deactivateMenuItem(Long id);
+
+    List<MenuItem> getAllMenuItems();
 }

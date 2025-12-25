@@ -6,6 +6,4 @@ import com.example.demo.entity.User;
 public interface UserService {
 
     User register(RegisterRequest request);
-
-    User findByEmailIgnoreCase(String email);
 }
