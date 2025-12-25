@@ -19,7 +19,7 @@ public class OpenApiConfig {
                         .version("1.0")
                         .description("API documentation for Demo project"))
                 .servers(List.of(
-                        new Server().url("https://9192.pro604cr.amypo.ai/")
+                        new Server().url("https://9298.408procr.amypo.ai/")
                 ));
     }
 }
