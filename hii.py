@@ -19,5 +19,4 @@ while True:
             print("Folder Captured!")
         except Exception as e:
             print(f"Error: {e}")
-    time.sleep(0.5)                                                                                  
-    
+    time.sleep(0.5)
