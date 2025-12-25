@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ingredients")
+@RequestMapping("/ingredients")
 public class IngredientController {
 
     private final IngredientService service;
@@ -20,8 +20,8 @@ public class IngredientController {
 
     @PostMapping
     public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.createIngredient(ingredient));
+        Ingredient created = service.createIngredient(ingredient);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -41,9 +41,10 @@ public class IngredientController {
         return ResponseEntity.ok(service.updateIngredient(id, ingredient));
     }
 
-    @PutMapping("/{id}/deactivate")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivateIngredient(@PathVariable Long id) {
-        service.deactivateIngredient(id);
-        return ResponseEntity.ok().build();
+        Ingredient ing = service.getIngredientById(id);
+        ing.setActive(false);
+        return ResponseEntity.noContent().build();
     }
 }

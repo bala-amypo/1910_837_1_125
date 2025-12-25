@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/menu-items")
+@RequestMapping("/menu-items")
 public class MenuItemController {
 
     private final MenuItemService service;
@@ -20,8 +20,14 @@ public class MenuItemController {
 
     @PostMapping
     public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.createMenuItem(menuItem));
+        return new ResponseEntity<>(service.createMenuItem(menuItem), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MenuItem> updateMenuItem(
+            @PathVariable Long id,
+            @RequestBody MenuItem menuItem) {
+        return ResponseEntity.ok(service.updateMenuItem(id, menuItem));
     }
 
     @GetMapping
@@ -34,16 +40,9 @@ public class MenuItemController {
         return ResponseEntity.ok(service.getMenuItemById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MenuItem> updateMenuItem(
-            @PathVariable Long id,
-            @RequestBody MenuItem menuItem) {
-        return ResponseEntity.ok(service.updateMenuItem(id, menuItem));
-    }
-
-    @PutMapping("/{id}/deactivate")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivateMenuItem(@PathVariable Long id) {
         service.deactivateMenuItem(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
