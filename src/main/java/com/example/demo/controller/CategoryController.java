@@ -5,13 +5,11 @@ import com.example.demo.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
-
     private final CategoryService service;
 
     public CategoryController(CategoryService service) {
@@ -33,9 +31,14 @@ public class CategoryController {
         return ResponseEntity.ok(service.getCategoryById(id));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+        return ResponseEntity.ok(service.updateCategory(id, category));
+    }
+
+    @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateCategory(@PathVariable Long id) {
         service.deactivateCategory(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
