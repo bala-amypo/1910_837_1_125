@@ -1,40 +1,27 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity @Data
 public class MenuItem {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique = true)
     private String name;
     private String description;
     private BigDecimal sellingPrice;
-    private Boolean active = true;
+    private Boolean active = false;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToMany
+    @JoinTable(name = "menu_item_category",
+               joinColumns = @JoinColumn(name = "menu_item_id"),
+               inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public BigDecimal getSellingPrice() { return sellingPrice; }
-    public void setSellingPrice(BigDecimal sellingPrice) { this.sellingPrice = sellingPrice; }
-
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
-
-    public Set<Category> getCategories() { return categories; }
-    public void setCategories(Set<Category> categories) { this.categories = categories; }
 }

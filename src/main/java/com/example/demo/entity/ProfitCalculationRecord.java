@@ -1,25 +1,17 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-@Entity
+@Entity @Data
 public class ProfitCalculationRecord {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Double profitMargin;
-
-    @ManyToOne
+    @ManyToOne @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Double getProfitMargin() { return profitMargin; }
-    public void setProfitMargin(Double profitMargin) { this.profitMargin = profitMargin; }
-
-    public MenuItem getMenuItem() { return menuItem; }
-    public void setMenuItem(MenuItem menuItem) { this.menuItem = menuItem; }
+    private BigDecimal totalCost;
+    private Double profitMargin;
+    private LocalDateTime calculatedAt = LocalDateTime.now();
 }
