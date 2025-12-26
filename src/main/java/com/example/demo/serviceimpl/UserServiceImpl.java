@@ -10,28 +10,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository,
-                           PasswordEncoder passwordEncoder) {
-        this.repository = repository;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public User register(RegisterRequest request) {
-
-        if (repository.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
-            throw new BadRequestException("Email exists");
-        }
-
+    public User register(RegisterRequest req) {
+        if(userRepository.findByEmailIgnoreCase(req.getEmail()).isPresent()) 
+            throw new BadRequestException("Email already in use");
         User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
-
-        return repository.save(user);
+        user.setEmail(req.getEmail());
+        user.setFullName(req.getFullName());
+        user.setRole(req.getRole() == null ? "ROLE_USER" : req.getRole());
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
+        return userRepository.save(user);
     }
+    public User findByEmailIgnoreCase(String email) { return userRepository.findByEmailIgnoreCase(email).orElse(null); }
 }

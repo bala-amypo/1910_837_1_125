@@ -5,23 +5,17 @@ import com.example.demo.service.IngredientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/ingredients")
+@RequestMapping("/api/ingredients")
 public class IngredientController {
-
     private final IngredientService service;
-
-    public IngredientController(IngredientService service) {
-        this.service = service;
-    }
+    public IngredientController(IngredientService service) { this.service = service; }
 
     @PostMapping
-    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient created = service.createIngredient(ingredient);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ing) {
+        return new ResponseEntity<>(service.createIngredient(ing), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -34,17 +28,9 @@ public class IngredientController {
         return ResponseEntity.ok(service.getIngredientById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Ingredient> updateIngredient(
-            @PathVariable Long id,
-            @RequestBody Ingredient ingredient) {
-        return ResponseEntity.ok(service.updateIngredient(id, ingredient));
-    }
-
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateIngredient(@PathVariable Long id) {
-        Ingredient ing = service.getIngredientById(id);
-        ing.setActive(false);
-        return ResponseEntity.noContent().build();
+        service.deactivateIngredient(id);
+        return ResponseEntity.ok().build();
     }
 }
