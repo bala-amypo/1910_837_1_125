@@ -1,5 +1,4 @@
 package com.example.demo.entity;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -18,10 +17,6 @@ public class MenuItem {
     private Boolean active = false;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
-
     @ManyToMany
-    @JoinTable(name = "menu_item_category",
-               joinColumns = @JoinColumn(name = "menu_item_id"),
-               inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 }

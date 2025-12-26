@@ -1,5 +1,4 @@
 package com.example.demo.entity;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ public class Category {
     private String name;
     private String description;
     private Boolean active = true;
-
     @ManyToMany(mappedBy = "categories")
     private Set<MenuItem> menuItems = new HashSet<>();
 }
