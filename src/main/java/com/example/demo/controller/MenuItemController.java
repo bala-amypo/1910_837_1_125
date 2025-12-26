@@ -31,11 +31,6 @@ public class MenuItemController {
         return ResponseEntity.ok(service.getMenuItemById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem item) {
-        return ResponseEntity.ok(service.updateMenuItem(id, item));
-    }
-
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateMenuItem(@PathVariable Long id) {
         service.deactivateMenuItem(id);
