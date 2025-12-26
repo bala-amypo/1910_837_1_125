@@ -1,44 +1,34 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.example.demo.entity.MenuItem;
-import com.example.demo.service.MenuItemService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+@Entity
+public class MenuItem {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
+    private String name;
+    private String description;
+    private BigDecimal sellingPrice;
+    private Boolean active = false;
 
-@RestController
-@RequestMapping("/api/menu-items")
-public class MenuItemController {
-    private final MenuItemService service;
+    @ManyToMany
+    @JoinTable(name = "menu_item_category",
+               joinColumns = @JoinColumn(name = "menu_item_id"),
+               inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
-    public MenuItemController(MenuItemService service) {
-        this.service = service;
-    }
-
-    @PostMapping
-    public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem item) {
-        return new ResponseEntity<>(service.createMenuItem(item), HttpStatus.CREATED);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<MenuItem>> getAllMenuItems() {
-        return ResponseEntity.ok(service.getAllMenuItems());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<MenuItem> getMenuItemById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getMenuItemById(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem item) {
-        return ResponseEntity.ok(service.updateMenuItem(id, item));
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivateMenuItem(@PathVariable Long id) {
-        service.deactivateMenuItem(id);
-        return ResponseEntity.ok().build();
-    }
+    public MenuItem() {}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public BigDecimal getSellingPrice() { return sellingPrice; }
+    public void setSellingPrice(BigDecimal sellingPrice) { this.sellingPrice = sellingPrice; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+    public Set<Category> getCategories() { return categories; }
+    public void setCategories(Set<Category> categories) { this.categories = categories; }
 }

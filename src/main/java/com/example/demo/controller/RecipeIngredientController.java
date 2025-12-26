@@ -1,43 +1,21 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
+import jakarta.persistence.*;
 
-import com.example.demo.entity.RecipeIngredient;
-import com.example.demo.service.RecipeIngredientService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+@Entity
+public class RecipeIngredient {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne private MenuItem menuItem;
+    @ManyToOne private Ingredient ingredient;
+    private Double quantityRequired;
 
-@RestController
-@RequestMapping("/api/recipe-ingredients")
-public class RecipeIngredientController {
-    private final RecipeIngredientService service;
-
-    public RecipeIngredientController(RecipeIngredientService service) {
-        this.service = service;
-    }
-
-    @PostMapping
-    public ResponseEntity<RecipeIngredient> addIngredientToMenuItem(@RequestBody RecipeIngredient ri) {
-        return ResponseEntity.ok(service.addIngredientToMenuItem(ri));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RecipeIngredient> updateQuantity(@PathVariable Long id, @RequestParam Double quantity) {
-        return ResponseEntity.ok(service.updateRecipeIngredient(id, quantity));
-    }
-
-    @GetMapping("/menu-item/{menuItemId}")
-    public ResponseEntity<List<RecipeIngredient>> getIngredientsByMenuItem(@PathVariable Long menuItemId) {
-        return ResponseEntity.ok(service.getIngredientsByMenuItem(menuItemId));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeIngredientFromRecipe(@PathVariable Long id) {
-        service.removeIngredientFromRecipe(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/ingredient/{ingredientId}/total-quantity")
-    public ResponseEntity<Double> getTotalQuantityOfIngredient(@PathVariable Long ingredientId) {
-        return ResponseEntity.ok(service.getTotalQuantityOfIngredient(ingredientId));
-    }
+    public RecipeIngredient() {}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public MenuItem getMenuItem() { return menuItem; }
+    public void setMenuItem(MenuItem menuItem) { this.menuItem = menuItem; }
+    public Ingredient getIngredient() { return ingredient; }
+    public void setIngredient(Ingredient ingredient) { this.ingredient = ingredient; }
+    public Double getQuantityRequired() { return quantityRequired; }
+    public void setQuantityRequired(Double quantityRequired) { this.quantityRequired = quantityRequired; }
 }
