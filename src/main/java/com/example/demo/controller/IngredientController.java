@@ -1,29 +1,36 @@
-package com.example.demo.entity;
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+package com.example.demo.controller;
 
-@Entity
-public class Ingredient {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true)
-    private String name;
-    private String unit;
-    private BigDecimal costPerUnit;
-    private Boolean active = true;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+import com.example.demo.entity.Ingredient;
+import com.example.demo.service.IngredientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-    public Ingredient() {}
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getUnit() { return unit; }
-    public void setUnit(String unit) { this.unit = unit; }
-    public BigDecimal getCostPerUnit() { return costPerUnit; }
-    public void setCostPerUnit(BigDecimal costPerUnit) { this.costPerUnit = costPerUnit; }
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+@RestController
+@RequestMapping("/api/ingredients")
+public class IngredientController {
+    private final IngredientService service;
+    public IngredientController(IngredientService service) { this.service = service; }
+
+    @PostMapping
+    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ing) {
+        return new ResponseEntity<>(service.createIngredient(ing), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Ingredient>> getAllIngredients() {
+        return ResponseEntity.ok(service.getAllIngredients());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Ingredient> getIngredientById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getIngredientById(id));
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateIngredient(@PathVariable Long id) {
+        service.deactivateIngredient(id);
+        return ResponseEntity.ok().build();
+    }
 }
