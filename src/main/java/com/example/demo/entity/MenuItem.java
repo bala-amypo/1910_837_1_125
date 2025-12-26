@@ -1,4 +1,5 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -8,7 +9,6 @@ import java.util.Set;
 public class MenuItem {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
     private String name;
     private String description;
     private BigDecimal sellingPrice;
@@ -21,10 +21,16 @@ public class MenuItem {
     private Set<Category> categories = new HashSet<>();
 
     public MenuItem() {}
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    // This method is required by test cases (line 101 and 492)
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
     public BigDecimal getSellingPrice() { return sellingPrice; }
     public void setSellingPrice(BigDecimal sellingPrice) { this.sellingPrice = sellingPrice; }
     public Boolean getActive() { return active; }
