@@ -1,5 +1,4 @@
 package com.example.demo.entity;
-
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -15,19 +14,16 @@ public class MenuItem {
     private Boolean active = false;
 
     @ManyToMany
-    @JoinTable(name = "menu_item_category",
-               joinColumns = @JoinColumn(name = "menu_item_id"),
-               inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JoinTable(name = "menu_item_category")
     private Set<Category> categories = new HashSet<>();
 
     public MenuItem() {}
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
-    // This method is required by test cases (line 101 and 492)
+    
+    // REQUIRED BY TESTS
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
