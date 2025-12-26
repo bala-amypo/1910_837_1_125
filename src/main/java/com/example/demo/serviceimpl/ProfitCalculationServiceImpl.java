@@ -22,13 +22,13 @@ public class ProfitCalculationServiceImpl implements ProfitCalculationService {
     @Override
     public ProfitCalculationRecord calculateProfit(Long id) {
         MenuItem item = mRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        List<RecipeIngredient> ingredients = rRepo.findByMenuItemId(id);
-        if (ingredients.isEmpty()) throw new BadRequestException("Cost cannot be computed: No ingredients");
+        List<RecipeIngredient> ris = rRepo.findByMenuItemId(id);
+        if (ris.isEmpty()) throw new BadRequestException("Cost cannot be computed: No ingredients");
 
         BigDecimal totalCost = BigDecimal.ZERO;
-        for (RecipeIngredient ri : ingredients) {
-            BigDecimal cost = ri.getIngredient().getCostPerUnit().multiply(BigDecimal.valueOf(ri.getQuantityRequired()));
-            totalCost = totalCost.add(cost);
+        for (RecipeIngredient ri : ris) {
+            BigDecimal qty = BigDecimal.valueOf(ri.getQuantityRequired());
+            totalCost = totalCost.add(ri.getIngredient().getCostPerUnit().multiply(qty));
         }
 
         ProfitCalculationRecord record = new ProfitCalculationRecord();
