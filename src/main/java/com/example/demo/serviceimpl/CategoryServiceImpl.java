@@ -26,5 +26,5 @@ public class CategoryServiceImpl implements CategoryService {
     public void deactivateCategory(Long id) { Category c = getCategoryById(id); c.setActive(false); repository.save(c); }
 }
 
-//service-bus logic
-//impl-
+//service-method
+//impl-logic
