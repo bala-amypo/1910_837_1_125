@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController //html format
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -27,7 +27,7 @@ public class AuthController {
         return new ResponseEntity<>(userService.register(req), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login") //creating
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest req) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword()));
         User u = userService.findByEmailIgnoreCase(req.getEmail());

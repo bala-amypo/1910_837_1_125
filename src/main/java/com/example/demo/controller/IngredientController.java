@@ -18,7 +18,7 @@ public class IngredientController {
         return new ResponseEntity<>(service.createIngredient(ing), HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping //retrive data
     public ResponseEntity<List<Ingredient>> getAllIngredients() {
         return ResponseEntity.ok(service.getAllIngredients());
     }
