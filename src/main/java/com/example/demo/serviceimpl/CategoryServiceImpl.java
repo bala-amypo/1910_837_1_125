@@ -25,3 +25,6 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAllCategories() { return repository.findAll(); }
     public void deactivateCategory(Long id) { Category c = getCategoryById(id); c.setActive(false); repository.save(c); }
 }
+
+//service-bus logic
+//impl-

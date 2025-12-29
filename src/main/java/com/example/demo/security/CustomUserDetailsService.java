@@ -18,3 +18,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(u.getEmail(), u.getPassword(), List.of(new SimpleGrantedAuthority(u.getRole())));
     }
 }
+
+//jwt token-security,validate
